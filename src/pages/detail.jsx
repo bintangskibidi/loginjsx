@@ -1,32 +1,36 @@
 import axios from "axios";
 // eslint-disable-next-line no-unused-vars
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom/cjs/react-router-dom.min";
+import { useParams } from "react-router-dom";
 
 function Detail() {
-  const {id} = useParams();
-  const [makanan, setMakanan] = useState([]);
+  const { id } = useParams(); // Mengambil nilai parameter dari URL
+  const [produk, setProduk] = useState(null);
 
-
-
+  // Mengambil data produk berdasarkan id
   useEffect(() => {
-    const getData = () => {
-      axios
-        .get("http://localhost:5000/minumans/" + id)
-        .then((data) => setMakanan(data.data))
-        .catch((error) => console.log(error));
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(`http://localhost:5000/minumans/${id}`);
+        setProduk(response.data);
+      } catch (error) {
+        console.error("Terjadi kesalahan saat mengambil data:", error);
+      }
     };
-    getData();
-  }, []);
+
+    fetchData();
+  }, [id]); // Menambahkan id ke dalam dependency array
+
+  if (!produk) {
+    return <div>Loading...</div>; // Menampilkan loading jika data belum ada
+  }
 
   return (
     <div>
-      <h3>
-        <span>{makanan.id}</span> {makanan.produk}
-      </h3>
-      <p>{makanan.harga}</p>
-      <p>{makanan.deskripsi}</p>
-
+      <h1>{produk.produk}</h1>
+      <p>Harga: {produk.harga}</p>
+      <p>Deskripsi: {produk.deskripsi}</p>
+      <img src={produk.gambar} alt={produk.produk} />
     </div>
   );
 }

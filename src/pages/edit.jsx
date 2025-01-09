@@ -2,14 +2,11 @@ import axios from "axios";
 // eslint-disable-next-line no-unused-vars
 import React, { useEffect, useState } from "react";
 import { Button, Form } from "react-bootstrap";
-import {
-  useHistory,
-  useParams,
-} from "react-router-dom/cjs/react-router-dom.min";
+import { useNavigate, useParams } from "react-router-dom";
 
 function Edit() {
-  const history = useHistory();
-  const {id} = useParams(); // mengambil nilai parameter yg ada di URL browser
+  const navigate = useNavigate();
+  const { id } = useParams(); // mengambil nilai parameter yg ada di URL browser
   const [produk, setProduk] = useState("");
   const [harga, setHarga] = useState("");
   const [deskripsi, setDeskripsi] = useState("");
@@ -27,27 +24,26 @@ function Edit() {
         setGambar(drink.gambar);
       })
       .catch((error) => {
-        alert("terjadi kesalahan sir" + error);
+        alert("Terjadi kesalahan: " + error);
       });
-  }, []);
+  }, [id]); // Menambahkan id ke dalam dependency array
 
- const edit = async (e) => {
-  e.preventDefault();
+  const edit = async (e) => {
+    e.preventDefault();
 
-  try {
-    await axios.put("http://localhost:5000/minumans/" + id , {
-      produk,
-      deskripsi,
-      harga,
-      gambar,
-    });
+    try {
+      await axios.put("http://localhost:5000/minumans/" + id, {
+        produk,
+        deskripsi,
+        harga,
+        gambar,
+      });
 
-    history.push("/data");
-    window.location.reload();
-  } catch (error) {
-    console.log(error);
-  }
- };
+      navigate("/data"); // Menggunakan navigate untuk berpindah halaman
+    } catch (error) {
+      console.log("Terjadi kesalahan saat mengedit data: ", error);
+    }
+  };
 
   return (
     <div style={{ padding: "50px" }}>
@@ -62,7 +58,7 @@ function Edit() {
             value={produk}
             onChange={(e) => setProduk(e.target.value)}
             type="text"
-            placeholder="nama Produk"
+            placeholder="Nama Produk"
           />
         </Form.Group>
 

@@ -1,12 +1,13 @@
 import axios from "axios";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+// eslint-disable-next-line no-unused-vars
+import React, { useState } from "react";
+import { useNavigate  } from "react-router-dom";
 import Swal from "sweetalert2";
 import "../style/register.css"
 
 export default function Login() {
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");                             
+  const [password, setPassword] = useState("");                              
   const navigate = useNavigate();
 
   const login = async (e) => {
@@ -16,7 +17,7 @@ export default function Login() {
     try {
       // library opensource yg digunkan untuk request data melalui http
       await axios.post(
-        "http://localhost:2026/api/user/login",
+        "http://localhost:2026/api/user/register",
         {
           email: email,
           password: password,
@@ -31,7 +32,7 @@ export default function Login() {
         timer: 1500,
       });
       setTimeout(() => {
-        navigate("localhost:5173");
+        navigate("/lending");
       }, 1500);
     } catch (error) {
       console.log(error);
@@ -42,6 +43,7 @@ export default function Login() {
       <div className="container1">
         <h3>Login</h3>
         <form onSubmit={login} method="POST">
+          <br />
           <label>Email</label>
           <br />
           <input
@@ -64,7 +66,7 @@ export default function Login() {
           <button type="submit">Login</button>
           <p>
             {" "}
-            Belum Punya Akun?
+            Belum punya akun?
             <a href="/register">Register</a>
           </p>
         </form>
